@@ -71,8 +71,8 @@ body {
 
 body {
   font-family: var(--font-family);
-  color: var(--text-primary);
-  background-color: var(--bg-secondary);
+  color: var(--text-inverse);
+  background-color: var(--bg-dark);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
