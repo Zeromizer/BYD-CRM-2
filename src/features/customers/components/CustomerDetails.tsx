@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useCustomer, useDeleteCustomer, useUpdateChecklistItem } from '../hooks/useCustomers';
-import { Button, Card, CardHeader, CardBody, LoadingSpinner, Modal } from '@/shared/components';
+import { Button, LoadingSpinner, Modal } from '@/shared/components';
 import type { Customer } from '../schemas/customer.schema';
 import './CustomerDetails.css';
+
+type TabType = 'details' | 'proposal' | 'vsa' | 'documents' | 'scanner';
 
 interface CustomerDetailsProps {
   customerId: string;
@@ -21,6 +23,7 @@ export const CustomerDetails: React.FC<CustomerDetailsProps> = ({
   const deleteCustomer = useDeleteCustomer();
   const updateChecklistItem = useUpdateChecklistItem();
 
+  const [activeTab, setActiveTab] = useState<TabType>('details');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const handleDelete = async () => {
@@ -66,40 +69,66 @@ export const CustomerDetails: React.FC<CustomerDetailsProps> = ({
 
   return (
     <div className="customer-details">
+      {/* Header with Name and Action Buttons */}
       <div className="customer-details__header">
-        <Button variant="ghost" onClick={onBack} className="customer-details__back">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M19 12H5M12 19l-7-7 7-7" />
-          </svg>
-          Back
-        </Button>
+        <h1 className="customer-details__name">{customer.name}</h1>
         <div className="customer-details__actions">
-          <Button variant="secondary" onClick={() => onEdit(customer)}>
-            Edit Customer
+          <Button variant="primary" size="medium">
+            Print Form
           </Button>
-          <Button variant="danger" onClick={() => setShowDeleteModal(true)}>
-            Delete
+          <Button variant="primary" size="medium">
+            Combine & Print
+          </Button>
+          <Button variant="primary" size="medium">
+            Populate Excel
           </Button>
         </div>
       </div>
 
+      {/* Tab Navigation */}
+      <div className="customer-details__tabs tabs">
+        <button
+          className={`tab ${activeTab === 'details' ? 'tab-active' : ''}`}
+          onClick={() => setActiveTab('details')}
+        >
+          Details
+        </button>
+        <button
+          className={`tab ${activeTab === 'proposal' ? 'tab-active' : ''}`}
+          onClick={() => setActiveTab('proposal')}
+        >
+          Proposal
+        </button>
+        <button
+          className={`tab ${activeTab === 'vsa' ? 'tab-active' : ''}`}
+          onClick={() => setActiveTab('vsa')}
+        >
+          VSA
+        </button>
+        <button
+          className={`tab ${activeTab === 'documents' ? 'tab-active' : ''}`}
+          onClick={() => setActiveTab('documents')}
+        >
+          Documents
+        </button>
+        <button
+          className={`tab ${activeTab === 'scanner' ? 'tab-active' : ''}`}
+          onClick={() => setActiveTab('scanner')}
+        >
+          Scanner
+        </button>
+      </div>
+
+      {/* Tab Content */}
       <div className="customer-details__content">
-        <Card>
-          <CardHeader>
-            <div className="customer-details__title-section">
-              <h1 className="customer-details__name">{customer.name}</h1>
-              <span
-                className={`customer-details__badge ${
-                  customer.dealClosed
-                    ? 'customer-details__badge--closed'
-                    : 'customer-details__badge--open'
-                }`}
-              >
-                {customer.dealClosed ? 'Deal Closed' : 'Deal Open'}
-              </span>
+        {activeTab === 'details' && (
+          <div className="customer-details__tab-panel">
+            <div className="customer-details__info-header">
+              <Button variant="primary" size="medium" onClick={() => onEdit(customer)}>
+                Edit Details
+              </Button>
             </div>
-          </CardHeader>
-          <CardBody>
+
             <div className="customer-details__grid">
               {/* Personal Information */}
               <div className="customer-details__section">
@@ -234,8 +263,39 @@ export const CustomerDetails: React.FC<CustomerDetailsProps> = ({
                 </div>
               </div>
             </div>
-          </CardBody>
-        </Card>
+
+            {/* Delete Button */}
+            <div className="customer-details__danger-zone">
+              <Button variant="danger" size="medium" onClick={() => setShowDeleteModal(true)}>
+                Delete Customer
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'proposal' && (
+          <div className="customer-details__tab-panel">
+            <p className="customer-details__placeholder">Proposal feature coming soon...</p>
+          </div>
+        )}
+
+        {activeTab === 'vsa' && (
+          <div className="customer-details__tab-panel">
+            <p className="customer-details__placeholder">VSA feature coming soon...</p>
+          </div>
+        )}
+
+        {activeTab === 'documents' && (
+          <div className="customer-details__tab-panel">
+            <p className="customer-details__placeholder">Documents feature coming soon...</p>
+          </div>
+        )}
+
+        {activeTab === 'scanner' && (
+          <div className="customer-details__tab-panel">
+            <p className="customer-details__placeholder">Scanner feature coming soon...</p>
+          </div>
+        )}
       </div>
 
       {/* Delete Confirmation Modal */}

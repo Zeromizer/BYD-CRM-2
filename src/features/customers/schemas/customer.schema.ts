@@ -117,9 +117,15 @@ export const createCustomerSchema = customerSchema.omit({
 export type CreateCustomerInput = z.infer<typeof createCustomerSchema>;
 
 /**
- * Schema for updating a customer (all fields optional except id)
+ * Schema for updating a customer (all fields optional, id is passed separately)
  */
-export const updateCustomerSchema = customerSchema.partial().required({ id: true });
+export const updateCustomerSchema = customerSchema.omit({
+  id: true,
+  consultantId: true,
+  createdAt: true,
+  updatedAt: true,
+  encrypted: true,
+}).partial();
 
 export type UpdateCustomerInput = z.infer<typeof updateCustomerSchema>;
 
