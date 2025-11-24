@@ -15,3 +15,53 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+// Google API types
+declare namespace gapi {
+  function load(api: string, callback: () => void): void;
+
+  namespace client {
+    function init(config: {
+      apiKey: string;
+      clientId: string;
+      discoveryDocs: string[];
+      scope: string;
+    }): Promise<void>;
+  }
+
+  namespace auth2 {
+    function getAuthInstance(): GoogleAuth;
+
+    interface GoogleAuth {
+      isSignedIn: {
+        get(): boolean;
+        listen(callback: (isSignedIn: boolean) => void): string;
+      };
+      signIn(): Promise<GoogleUser>;
+      signOut(): Promise<void>;
+      currentUser: {
+        get(): GoogleUser;
+      };
+    }
+
+    interface GoogleUser {
+      getBasicProfile(): BasicProfile;
+      getAuthResponse(): AuthResponse;
+    }
+
+    interface BasicProfile {
+      getId(): string;
+      getEmail(): string;
+      getName(): string;
+      getImageUrl(): string;
+    }
+
+    interface AuthResponse {
+      access_token: string;
+    }
+  }
+}
+
+interface Window {
+  gapi: typeof gapi;
+}
