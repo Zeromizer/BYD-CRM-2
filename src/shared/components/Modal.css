@@ -1,0 +1,146 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: modal-overlay-fade-in 0.2s ease-out;
+}
+
+@keyframes modal-overlay-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  animation: modal-slide-up 0.3s ease-out;
+}
+
+@keyframes modal-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modal Sizes */
+.modal--small {
+  width: 100%;
+  max-width: 400px;
+}
+
+.modal--medium {
+  width: 100%;
+  max-width: 600px;
+}
+
+.modal--large {
+  width: 100%;
+  max-width: 900px;
+}
+
+.modal--full {
+  width: 95vw;
+  max-width: none;
+  height: 90vh;
+  max-height: 90vh;
+}
+
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.modal__title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.modal__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: var(--border-radius);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.modal__close:hover {
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+.modal__close:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.modal__content {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Scrollbar styling */
+.modal__content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal__content::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+
+.modal__content::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+.modal__content::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .modal {
+    width: 100%;
+    max-width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  .modal-overlay {
+    padding: 0;
+  }
+}
