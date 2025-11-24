@@ -1,13 +1,20 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '@/features/auth/hooks/useAuth';
+import { CustomerList, CustomerForm, CustomerDetails } from '../components';
+import { Button } from '@/shared/components';
+import type { Customer } from '../schemas/customer.schema';
 import './Dashboard.css';
+
+type ViewMode = 'list' | 'create' | 'edit' | 'details';
 
 /**
  * Dashboard Page
  * Main page of the application - shows customer list and details
  */
 export function Dashboard() {
-  const { isSignedIn, isInitialized, isLoading, signIn, consultant } = useAuth();
+  const { isSignedIn, isInitialized, isLoading, signIn, signOut, consultant } = useAuth();
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
 
   useEffect(() => {
     console.log('Dashboard mounted');
@@ -69,34 +76,105 @@ export function Dashboard() {
     );
   }
 
+  // Handlers
+  const handleSelectCustomer = (customer: Customer) => {
+    setSelectedCustomer(customer);
+    setViewMode('details');
+  };
+
+  const handleCreateCustomer = () => {
+    setSelectedCustomer(null);
+    setViewMode('create');
+  };
+
+  const handleEditCustomer = (customer: Customer) => {
+    setSelectedCustomer(customer);
+    setViewMode('edit');
+  };
+
+  const handleBackToList = () => {
+    setSelectedCustomer(null);
+    setViewMode('list');
+  };
+
+  const handleFormSuccess = () => {
+    setSelectedCustomer(null);
+    setViewMode('list');
+  };
+
+  const handleFormCancel = () => {
+    setSelectedCustomer(null);
+    setViewMode('list');
+  };
+
   // Signed in - show dashboard
   return (
     <div className="dashboard">
       <header className="dashboard-header">
         <div className="header-content">
-          <h1>BYD CRM</h1>
+          <div className="header-left">
+            <h1>BYD CRM</h1>
+            {viewMode !== 'list' && (
+              <span className="header-breadcrumb">
+                {viewMode === 'create' && '/ New Customer'}
+                {viewMode === 'edit' && `/ Edit: ${selectedCustomer?.name}`}
+                {viewMode === 'details' && `/ ${selectedCustomer?.name}`}
+              </span>
+            )}
+          </div>
           <div className="header-user">
             <img
               src={consultant?.picture}
               alt={consultant?.name}
               className="user-avatar"
             />
-            <span>{consultant?.name}</span>
+            <span className="user-name">{consultant?.name}</span>
+            <Button variant="ghost" size="small" onClick={signOut}>
+              Sign Out
+            </Button>
           </div>
         </div>
       </header>
 
       <main className="dashboard-main">
-        <div className="container">
-          <div className="welcome-message">
-            <h2>Welcome back, {consultant?.name?.split(' ')[0]}!</h2>
-            <p>Your customer data is loading...</p>
-            <p className="info-text">
-              ℹ️ This is the initial setup. Continue building with Claude Code to add
-              customer list, forms, and Excel features.
-            </p>
+        {viewMode === 'list' && (
+          <CustomerList
+            onSelectCustomer={handleSelectCustomer}
+            onCreateCustomer={handleCreateCustomer}
+          />
+        )}
+
+        {viewMode === 'create' && (
+          <div className="dashboard-form-container">
+            <h2 className="dashboard-form-title">Create New Customer</h2>
+            <CustomerForm
+              mode="create"
+              onSuccess={handleFormSuccess}
+              onCancel={handleFormCancel}
+            />
           </div>
-        </div>
+        )}
+
+        {viewMode === 'edit' && selectedCustomer && (
+          <div className="dashboard-form-container">
+            <h2 className="dashboard-form-title">Edit Customer</h2>
+            <CustomerForm
+              customer={selectedCustomer}
+              mode="edit"
+              onSuccess={handleFormSuccess}
+              onCancel={handleFormCancel}
+            />
+          </div>
+        )}
+
+        {viewMode === 'details' && selectedCustomer && (
+          <CustomerDetails
+            customerId={selectedCustomer.id}
+            onEdit={handleEditCustomer}
+            onBack={handleBackToList}
+            onDeleted={handleBackToList}
+          />
+        )}
       </main>
     </div>
   );
