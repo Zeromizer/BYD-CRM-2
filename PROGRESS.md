@@ -2,7 +2,7 @@
 
 **Last Updated:** 2025-11-24
 **Current Phase:** Phase 1 - Customer Management UI
-**Overall Completion:** ~25% (Phase 0: 100% + Phase 1: 75% in progress)
+**Overall Completion:** ~30% (Phase 0: 100% + Phase 1: 85% in progress)
 
 ---
 
@@ -11,7 +11,8 @@
 This document tracks the development progress of BYD CRM v2.0, a modern Customer Relationship Management system for BYD MotorEast car dealership sales consultants.
 
 **Repository:** `/home/user/BYD-CRM-2`
-**Branch:** `claude/update-tracker-google-auth-01J8RNvEw9cveVK3yMhkkvfe`
+**Main Branch:** `main`
+**Workflow:** All changes require Pull Requests to `main`
 
 ---
 
@@ -60,9 +61,16 @@ This document tracks the development progress of BYD CRM v2.0, a modern Customer
 
 ### 🚧 Phase 1: Customer Management UI (IN PROGRESS)
 
-**Status:** 75% Complete
+**Status:** 85% Complete
 **Started:** 2025-11-24
 **Last Updated:** 2025-11-24
+
+**Recent Updates:**
+- ✅ Fixed hardcoded purple theme colors in Dashboard.css
+- ✅ Successfully deployed cyan theme to GitHub Pages
+- ✅ Merged all UI updates to main branch via PR #11
+- ✅ Set up PR workflow with templates and contributing guidelines
+- ✅ Cleaned up development branches
 
 #### Completed Components ✅
 
@@ -351,7 +359,9 @@ This document tracks the development progress of BYD CRM v2.0, a modern Customer
 3. **Read Existing Code:** Review completed files in the same feature area
 4. **Follow Patterns:** Maintain consistency with existing architecture
 5. **Update This File:** Check off items as you complete them
-6. **Commit Regularly:** Push to branch `claude/review-app-planning-01PfXG9daU6h6uGU3TMqTJ3E`
+6. **Create Feature Branch:** Always branch from `main` for new work
+7. **Open Pull Request:** All changes must go through PR review
+8. **Read CONTRIBUTING.md:** Follow the established workflow and guidelines
 
 ### Key Architecture Decisions
 
@@ -369,10 +379,14 @@ This document tracks the development progress of BYD CRM v2.0, a modern Customer
 - **Config:** `src/shared/constants/config.ts`
 - **Design system:** `src/App.css`
 
-### Branch Information
+### Workflow Information
 
-- **Current branch:** `claude/update-tracker-google-auth-01J8RNvEw9cveVK3yMhkkvfe`
-- **Always push to this branch:** `git push -u origin claude/update-tracker-google-auth-01J8RNvEw9cveVK3yMhkkvfe`
+- **Main branch:** `main` (protected, requires Pull Requests)
+- **Feature branches:** Create from `main` with descriptive names
+- **PR Template:** `.github/pull_request_template.md`
+- **Contributing Guide:** `CONTRIBUTING.md`
+- **Branch Protection:** `.github/BRANCH_PROTECTION.md` (setup guide)
+- **Deployment:** GitHub Pages from `main/docs` folder
 - **Retry on network errors:** Up to 4 times with exponential backoff
 
 ---
