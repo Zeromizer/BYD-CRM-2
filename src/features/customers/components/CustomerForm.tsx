@@ -90,7 +90,10 @@ export const CustomerForm: React.FC<CustomerFormProps> = ({
       } else if (customer) {
         await updateCustomer.mutateAsync({
           customerId: customer.id,
-          data: formData,
+          data: {
+            ...formData,
+            checklist,
+          },
         });
       }
 
