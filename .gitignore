@@ -9,6 +9,7 @@ node_modules/
 # Production
 /dist
 /build
+# Note: /docs is used for GitHub Pages deployment, so it's committed
 
 # Misc
 .DS_Store
