@@ -1,0 +1,77 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - claude/**
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build with environment variables
+        env:
+          VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
+          VITE_GOOGLE_API_KEY: ${{ secrets.VITE_GOOGLE_API_KEY }}
+          VITE_ENCRYPTION_SALT: ${{ secrets.VITE_ENCRYPTION_SALT }}
+        run: npm run build
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit build files
+        run: |
+          git add docs -f
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "build: Deploy to GitHub Pages [skip ci]"
+          fi
+
+      - name: Push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+          echo "Pushing to branch: $BRANCH_NAME"
+          git push origin HEAD:$BRANCH_NAME || {
+            echo "Retrying push in 2s..."
+            sleep 2
+            git push origin HEAD:$BRANCH_NAME || {
+              echo "Retrying push in 4s..."
+              sleep 4
+              git push origin HEAD:$BRANCH_NAME || {
+                echo "Retrying push in 8s..."
+                sleep 8
+                git push origin HEAD:$BRANCH_NAME || {
+                  echo "Final retry in 16s..."
+                  sleep 16
+                  git push origin HEAD:$BRANCH_NAME
+                }
+              }
+            }
+          }
